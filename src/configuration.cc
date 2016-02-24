@@ -126,6 +126,7 @@ public:
 				{"collect-only", no_argument, 0, 'C'},
 				{"report-only", no_argument, 0, 'r'},
 				{"merge", no_argument, 0, 'm'},
+				{"create-database", no_argument, 0, 'w'},
 				{"python-parser", required_argument, 0, 'P'},
 				{"bash-parser", required_argument, 0, 'B'},
 				{"bash-method", required_argument, 0, '4'},
@@ -330,6 +331,9 @@ public:
 			case 'm':
 				setKey("running-mode", IConfiguration::MODE_MERGE_ONLY);
 				break;
+			case 'w':
+				setKey("running-mode", IConfiguration::MODE_CREATE_DATABASE);
+				break;
 			case 'l': {
 				StrVecMap_t vec = getCommaSeparatedList(std::string(optarg));
 
@@ -523,6 +527,8 @@ public:
 				" --replace-src-path=path replace the string found before the : with the string \n"
 				"                         found after the :\n"
 				" --path-strip-level=num  path levels to show for common paths (default: %d)\n"
+				"\n"
+				" --create-database       create a coverage database for use with no symbols\n"
 				"\n"
 				" --gcov                  use gcov parser instead of DWARF debugging info\n"
 				" --clang                 use Clang Sanitizer-coverage parser\n"
