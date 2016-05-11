@@ -1,7 +1,8 @@
 #!/usr/bin/make
 
 chroot=/tmp/32-bit-chroot
-kcov_deps=libdw-dev libelf-dev elfutils libcurl4-openssl-dev python python3 cmake binutils-dev
+kcov_chroot_deps=libdw-dev libelf-dev elfutils libcurl4-openssl-dev python python3 cmake binutils-dev
+kcov_deps=libiberty-dev ${kcov_chroot_deps}
 
 .PHONY: prepare_environment
 
@@ -31,17 +32,17 @@ build:
 build_gcc: build build_reference
 	sudo rm -rf ${chroot}/tmp/kcov/build ${chroot}/tmp/kcov/build-tests
 	sudo mkdir -p ${chroot}/tmp/kcov/build ${chroot}/tmp/kcov/build-tests ${chroot}/tmp/kcov/build-tools
-	sudo i386 chroot ${chroot} sh -c "cd /tmp/kcov/build && cmake .."
+	sudo i386 chroot ${chroot} sh -c "cd /tmp/kcov/build && cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=i386 .."
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build"
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build install"
-	sudo i386 chroot ${chroot} sh -c "cd /tmp/kcov/build-tools && cmake ../tools"
+	sudo i386 chroot ${chroot} sh -c "cd /tmp/kcov/build-tools && cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=i386 ../tools"
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build-tools"
-	sudo i386 chroot ${chroot} sh -c "cd /tmp/kcov/build-tests && cmake ../tests"
+	sudo i386 chroot ${chroot} sh -c "cd /tmp/kcov/build-tests && cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=i386 ../tests"
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build-tests"
 	sudo i386 chroot ${chroot} sh -c "apt-get -y remove binutils-dev"
-	sudo i386 chroot ${chroot} sh -c "mkdir -p /tmp/kcov/build-no-binutils && cd /tmp/kcov/build-no-binutils && cmake .."
+	sudo i386 chroot ${chroot} sh -c "mkdir -p /tmp/kcov/build-no-binutils && cd /tmp/kcov/build-no-binutils && cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=i386 .."
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build-no-binutils"
-	sudo i386 chroot ${chroot} sh -c "mkdir -p /tmp/kcov/build-static && cd /tmp/kcov/build-static && cmake -DKCOV_STATIC_BUILD=1 .."
+	sudo i386 chroot ${chroot} sh -c "mkdir -p /tmp/kcov/build-static && cd /tmp/kcov/build-static && cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=i386 -DKCOV_STATIC_BUILD=1 .."
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build-static"
 
 run-performance: build_gcc
@@ -94,7 +95,7 @@ prepare_linux_gcc:
 	sudo i386 debootstrap --arch=i386 --components=main,universe  precise $(chroot)
 	sudo i386 chroot "${chroot}" apt-get update
 	sudo i386 chroot "${chroot}" apt-get install -y build-essential
-	sudo i386 chroot "${chroot}" apt-get install -y ${kcov_deps}
+	sudo i386 chroot "${chroot}" apt-get install -y ${kcov_chroot_deps}
 	sudo cp -r "$(shell pwd)" "${chroot}/tmp/"
 	sudo i386 chroot "${chroot}" sh -c "mount -t proc procfs /proc"
 
