@@ -33,9 +33,10 @@ class KcovTestCase(unittest.TestCase):
         return rv, output
 
     def do(self, cmdline, kcovKcov = True):
+        print cmdline
         output = ""
         rv = 0
-
+        print "extra"
         extra = ""
         if kcovKcov and sys.platform.startswith("linux"):
             extra = kcov + " --include-pattern=kcov --exclude-pattern=helper.cc,library.cc,html-data-files.cc " + outbase + "/kcov-kcov "
