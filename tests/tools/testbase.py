@@ -25,7 +25,6 @@ class KcovTestCase(unittest.TestCase):
         os.system("mkdir -p %s/kcov/" % (outbase))
 
     def doShell(self, cmdline):
-
         child = subprocess.Popen(cmdline, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = child.communicate()
         output = out + err
