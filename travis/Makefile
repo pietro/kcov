@@ -39,6 +39,7 @@ build_gcc: build build_reference
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build-tools"
 	sudo i386 chroot ${chroot} sh -c "cd /tmp/kcov/build-tests && cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=i386 ../tests"
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build-tests"
+	sudo i386 chroot ${chroot} sh -c "ls -la /tmp/kcov/build-tests"
 	sudo i386 chroot ${chroot} sh -c "apt-get -y remove binutils-dev"
 	sudo i386 chroot ${chroot} sh -c "mkdir -p /tmp/kcov/build-no-binutils && cd /tmp/kcov/build-no-binutils && cmake -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=i386 .."
 	sudo i386 chroot ${chroot} sh -c "make -C /tmp/kcov/build-no-binutils"
