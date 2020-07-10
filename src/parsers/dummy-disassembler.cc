@@ -28,6 +28,8 @@ public:
 		 */
 #if defined(__arm__)
 		return (offset & 1) == 0; // Thumb-conservative
+#elif defined(__aarch64__)
+		return (offset & 1) == 0; // Thumb-conservative
 #elif defined(__powerpc__)
 		return (offset & 3) == 0;
 #endif
